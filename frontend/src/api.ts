@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export interface Expense {
   id: number;
@@ -20,14 +20,14 @@ const getHeaders = (idempotencyKey?: string) => {
 }
 
 export const checkAuth = async () => {
-    const res = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
-    if (!res.ok) throw new Error('Not authenticated');
-    return res.json();
+  const res = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
+  if (!res.ok) throw new Error('Not authenticated');
+  return res.json();
 }
 
 export const logoutApi = async () => {
-    const res = await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
-    return res.json();
+  const res = await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
+  return res.json();
 }
 
 export const fetchExpenses = async (category?: string, sort?: string): Promise<Expense[]> => {
@@ -37,11 +37,11 @@ export const fetchExpenses = async (category?: string, sort?: string): Promise<E
 
   const res = await fetch(url.toString(), { headers: getHeaders(), credentials: 'include' });
   if (!res.ok) {
-     if (res.status === 401) {
-        window.location.reload();
-     }
-     const err = await res.json().catch(() => ({}));
-     throw new Error(err.error || 'Failed to fetch expenses');
+    if (res.status === 401) {
+      window.location.reload();
+    }
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to fetch expenses');
   }
   return res.json();
 };
@@ -54,13 +54,13 @@ export const createExpense = async (data: Omit<Expense, 'id' | 'created_at'>): P
     credentials: 'include',
     body: JSON.stringify(data),
   });
-  
+
   if (!res.ok) {
-     if (res.status === 401) {
-        window.location.reload();
-     }
-     const err = await res.json().catch(() => ({}));
-     throw new Error(err.error || 'Failed to create expense');
+    if (res.status === 401) {
+      window.location.reload();
+    }
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create expense');
   }
   return res.json();
 };
@@ -73,8 +73,8 @@ export const login = async (data: any) => {
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Failed to login');
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to login');
   }
   return res.json();
 }
@@ -87,8 +87,8 @@ export const signup = async (data: any) => {
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Failed to signup');
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to signup');
   }
   return res.json();
 }
