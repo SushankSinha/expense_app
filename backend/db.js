@@ -15,9 +15,7 @@ const initializeDB = async () => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-    DROP TABLE IF EXISTS expenses CASCADE;
-
-    CREATE TABLE expenses (
+    CREATE TABLE IF NOT EXISTS expenses (
       id SERIAL PRIMARY KEY,
       user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
       amount INTEGER NOT NULL,
